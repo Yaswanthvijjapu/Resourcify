@@ -23,4 +23,14 @@ const sendEmail = async (to, subject, html) => {
   }
 };
 
-module.exports = { sendEmail };
+const sendBookingStatusEmail = async (to, resourceName, status, startTime, endTime) => {
+  const subject = `Booking ${status} for ${resourceName}`;
+  const html = `
+    <h1>Booking Update</h1>
+    <p>Your booking for <strong>${resourceName}</strong> from <strong>${new Date(startTime).toLocaleString()}</strong> to <strong>${new Date(endTime).toLocaleString()}</strong> has been <strong>${status}</strong>.</p>
+    <p>Please contact your Manager for further details.</p>
+  `;
+  await sendEmail(to, subject, html);
+};
+
+module.exports = { sendEmail, sendBookingStatusEmail };
