@@ -12,6 +12,7 @@
     "dotenv": "^16.6.1",
     "express": "^4.21.1",
     "joi": "^17.13.3",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.2",
     "nodemailer": "^6.9.15"
