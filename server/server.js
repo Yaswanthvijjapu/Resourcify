@@ -6,8 +6,12 @@ const userRoutes = require('./routes/userRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const cors = require('cors');
+
+
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
