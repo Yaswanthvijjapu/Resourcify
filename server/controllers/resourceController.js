@@ -2,20 +2,16 @@ const Resource = require('../models/Resource');
 const { createResourceSchema, updateResourceSchema } = require('../utils/resourceValidate');
 
 const createResource = async (req, res) => {
-  const { error } = createResourceSchema.validate(req.body);
-  if (error) return res.status(400).json({ message: error.message });
-
-  const { name, description, department } = req.body;
-
   try {
+    const { error } = createResourceSchema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
     if (req.user.role !== 'Admin') {
       return res.status(403).json({ message: 'Only Admins can create resources' });
     }
 
     const resource = new Resource({
-      name,
-      description,
-      department,
+      ...req.body,
       createdBy: req.user.id,
     });
 
@@ -31,10 +27,13 @@ const getResources = async (req, res) => {
     let query = {};
     if (req.user.role === 'Manager') {
       query.department = req.user.department; // Managers see only their department
-    } else if (req.user.role === 'User') {
-      query.department = { $exists: true }; // Users can browse all resources
     }
-    // Admins see all resources (no query filter)
+    // Apply filters from query parameters
+    const { type, capacity, availability, features } = req.query;
+    if (type) query.type = type;
+    if (capacity) query.capacity = { $gte: Number(capacity) };
+    if (availability) query.availability = availability;
+    if (features) query.features = { $all: features.split(',').map(f => f.trim()) };
 
     const resources = await Resource.find(query).populate('createdBy', 'name email');
     res.json(resources);
@@ -61,10 +60,10 @@ const getResourceById = async (req, res) => {
 };
 
 const updateResource = async (req, res) => {
-  const { error } = updateResourceSchema.validate(req.body);
-  if (error) return res.status(400).json({ message: error.message });
-
   try {
+    const { error } = updateResourceSchema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
     if (req.user.role !== 'Admin') {
       return res.status(403).json({ message: 'Only Admins can update resources' });
     }

@@ -1,27 +1,54 @@
 const mongoose = require('mongoose');
 
 const resourceSchema = new mongoose.Schema({
-  name: {
+  name: { type: String, required: true },
+  type: {
     type: String,
-    required: [true, 'Resource name is required'],
-    trim: true,
-  },
-  description: {
-    type: String,
-    trim: true,
-  },
-  department: {
-    type: String,
-    required: [true, 'Department is required'],
-    trim: true, // e.g., 'IT', 'HR'
-  },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    enum: [
+      'Meeting Room',
+      'Lab Equipment',
+      'Vehicle',
+      'Workstation/Desk',
+      'Training Room',
+      'Sports Facility',
+      'Auditorium/Event Hall',
+      'Storage Space',
+      'Shared Equipment',
+    ],
     required: true,
   },
-}, {
-  timestamps: true,
+  location: { type: String },
+  capacity: { type: Number },
+  features: [String],
+  availability: { type: String },
+  images: [String],
+  description: { type: String },
+  requiresApproval: { type: Boolean, default: true },
+  department: { type: String },
+  equipmentType: { type: String },
+  usageInstructions: { type: String },
+  requiredTraining: { type: String },
+  maintenanceSchedule: { type: String },
+  fuelType: { type: String },
+  bookingDuration: { type: String },
+  assignedDriver: { type: String },
+  insuranceDetails: { type: String },
+  monitorSize: { type: String },
+  ergonomicChair: { type: Boolean },
+  standingDesk: { type: Boolean },
+  nearbyAmenities: [String],
+  cateringServices: { type: Boolean },
+  eventSupportStaff: { type: Boolean },
+  stageEquipment: [String],
+  lightingSoundSystems: [String],
+  size: { type: String },
+  securityLevel: { type: String },
+  temperatureControl: { type: String },
+  equipmentRental: { type: Boolean },
+  instructorAvailability: { type: String },
+  accessPermissions: [String],
+  usageQuotas: { type: String },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
 module.exports = mongoose.model('Resource', resourceSchema);
